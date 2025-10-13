@@ -1,7 +1,4 @@
-// 1_4_1 Fix the mistake
-/* 
-  Исправьте ошибку в коде.
-*/
+// 1_4_1 Ошибка в заголовке исправлена: вместо объекта person теперь используется его свойство person.name для корректного отображения имени.
 
 const person = {
     name: 'Gregorio Y. Zara',
@@ -14,7 +11,7 @@ const person = {
   export default function TodoList() {
     return (
       <div style={person.theme}>
-        <h1>{person}'s Todos</h1>
+        <h1>{person.name}'s Todos</h1>
         <img
           className="avatar"
           src="GregorioYZara.jpg"
