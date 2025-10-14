@@ -1,9 +1,4 @@
-// 2_2_1 Complete the gallery 
-/*
-  При нажатии кнопки "Next" на последней скульптуре происходит сбой кода. Исправьте логику, чтобы предотвратить сбой. Вы можете сделать это, добавив дополнительную логику в обработчик события или отключив кнопку, когда действие невозможно.
-
-  После устранения сбоя добавьте кнопку "Предыдущая", которая показывает предыдущую скульптуру. Она не должна разбиваться на первой скульптуре.
-*/
+// 2_2_1 Исправлена логика для кнопок навигации. Теперь кнопка "Next" безопасно переходит к следующему изображению, а при достижении последнего - возвращается к первому. Кнопка "Previous" позволяет вернуться к предыдущему изображению, а при достижении первого - переходит к последнему.
 
 import { useState } from 'react';
 import { sculptureList } from './data';
@@ -14,7 +9,11 @@ export default function Gallery() {
     const [showMore, setShowMore] = useState(false);
 
     function handleNextClick() {
-        setIndex(index + 1);
+        setIndex((index + 1) % sculptureList.length);
+    }
+
+    function handlePrevClick() {
+        setIndex((index - 1 + sculptureList.length) % sculptureList.length);
     }
 
     function handleMoreClick() {
@@ -24,6 +23,7 @@ export default function Gallery() {
     let sculpture = sculptureList[index];
     return (
         <>
+            <button onClick={handlePrevClick}>Previous</button>
             <button onClick={handleNextClick}>Next</button>
             <h2>
                 <i>{sculpture.name} </i>
