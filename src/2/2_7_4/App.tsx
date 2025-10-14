@@ -1,9 +1,5 @@
-// 2_7_4 Fix the mutations using Immer  
-/*
-    В этом примере все обработчики событий в App.js используют мутацию. В результате редактирование и удаление todos не работает. Перепишите handleAddTodo, handleChangeTodo и handleDeleteTodo с помощью Immer
-*/
+// 2_7_4 Исправление мутаций с использованием Immer: все обработчики событий (`handleAddTodo`, `handleChangeTodo`, `handleDeleteTodo`) были переписаны с использованием Immer для обновления состояния. Это исправляет ошибки, из-за которых редактирование и удаление `todos` не работало.
 
-import { useState } from 'react';
 import { useImmer } from 'use-immer';
 import AddTodo from './AddTodo';
 import TaskList from './TaskList';
@@ -22,29 +18,37 @@ const initialTodos = [
 ];
 
 export default function TaskApp() {
-    const [todos, setTodos] = useState(initialTodos);
+    const [todos, updateTodos] = useImmer(
+        initialTodos
+    );
 
     function handleAddTodo(title: string) {
-        todos.push({
-            id: nextId++,
-            title: title,
-            done: false,
+        updateTodos((draft) => {
+            draft.push({
+                id: nextId++,
+                title: title,
+                done: false,
+            });
         });
     }
 
     function handleChangeTodo(nextTodo: Todo) {
-        const todo = todos.find(
-            (t) => t.id === nextTodo.id
-        )!!;
-        todo.title = nextTodo.title;
-        todo.done = nextTodo.done;
+        updateTodos((draft) => {
+            const todo = draft.find(
+                (t) => t.id === nextTodo.id
+            )!!;
+            todo.title = nextTodo.title;
+            todo.done = nextTodo.done;
+        });
     }
 
     function handleDeleteTodo(todoId: number) {
-        const index = todos.findIndex(
-            (t) => t.id === todoId
-        );
-        todos.splice(index, 1);
+        updateTodos((draft) => {
+            const index = draft.findIndex(
+                (t) => t.id === todoId
+            );
+            draft.splice(index, 1);
+        });
     }
 
     return (
