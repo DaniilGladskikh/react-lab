@@ -1,14 +1,12 @@
-// 3_4_2 Swap two form fields
-/*
-  Эта форма позволяет вводить имя и фамилию. В ней также есть флажок, контролирующий, какое поле будет первым. Если установить флажок, поле "Фамилия" появится перед полем "Имя".
-
-  Это почти работает, но есть ошибка. Если вы заполните поле "Имя" и установите флажок, текст останется в первом поле (теперь это "Фамилия"). Исправьте это так, чтобы при изменении порядка ввода текст также перемещался.
-*/
+// 3_4_2 Реализована корректная перестановка полей формы с сохранением данных: cостояние полей теперь управляется в родительском компоненте App
 
 import { useState } from 'react';
 
 export default function App() {
   const [reverse, setReverse] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
   let checkbox = (
     <label>
       <input
@@ -22,24 +20,23 @@ export default function App() {
   if (reverse) {
     return (
       <>
-        <Field label="Last name" /> 
-        <Field label="First name" />
+        <Field label="Last name" text={lastName} setText={setLastName}/>
+        <Field label="First name" text={firstName} setText={setFirstName}/>
         {checkbox}
       </>
     );
   } else {
     return (
       <>
-        <Field label="First name" /> 
-        <Field label="Last name" />
+        <Field label="First name" text={firstName} setText={setFirstName}/>
+        <Field label="Last name" text={lastName} setText={setLastName}/>
         {checkbox}
       </>
-    );    
+    );
   }
 }
 
-function Field({ label }: { label: string }) {
-  const [text, setText] = useState('');
+function Field({ label, text, setText }: { label: string, text: string, setText: React.Dispatch<React.SetStateAction<string>> }) {
   return (
     <label>
       {label}:{' '}
