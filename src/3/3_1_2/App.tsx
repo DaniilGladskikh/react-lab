@@ -1,29 +1,52 @@
-// 3_1_2 Profile editor 
-/*
-    В проекте приведена форма, реализованная на чистом JavaScript.
+// 3_1_2 Реализован редактор профиля на React. Форма переключается между режимами редактирования и просмотра, а также обновляет текст приветствия
 
-    Эта форма переключается между двумя режимами: в режиме редактирования вы видите вводимые данные, а в режиме просмотра - только результат. Метка кнопки меняется между "Редактировать" и "Сохранить" в зависимости от того, в каком режиме вы находитесь. Когда вы изменяете вводимые данные, приветственное сообщение внизу обновляется в режиме реального времени.
-
-    Ваша задача - реализовать это на React. Для вашего удобства разметка уже была преобразована в JSX, но вам нужно будет сделать так, чтобы она показывала и скрывала входы, как это делает оригинал.
-
-    Убедитесь, что она также обновляет текст внизу!
-*/
-
+import { useState } from 'react';
 
 export default function EditProfile() {
+    const [isEditing, setIsEditing] = useState(false);
+    const [firstName, setFirstName] = useState('Jane');
+    const [lastName, setLastName] = useState('Jacobs');
+
     return (
-        <form>
+        <form
+            onSubmit={(e) => {
+                e.preventDefault();
+                setIsEditing(!isEditing);
+            }}
+        >
             <label>
-                First name: <b>Jane</b>
-                <input />
+                First name:{' '}
+                {isEditing ? (
+                    <input
+                        value={firstName}
+                        onChange={(e) => {
+                            setFirstName(e.target.value);
+                        }}
+                    />
+                ) : (
+                    <b>{firstName}</b>
+                )}
             </label>
             <label>
-                Last name: <b>Jacobs</b>
-                <input />
+                Last name:{' '}
+                {isEditing ? (
+                    <input
+                        value={lastName}
+                        onChange={(e) => {
+                            setLastName(e.target.value);
+                        }}
+                    />
+                ) : (
+                    <b>{lastName}</b>
+                )}
             </label>
-            <button type="submit">Edit Profile</button>
+            <button type="submit">
+                {isEditing ? 'Save' : 'Edit'} Profile
+            </button>
             <p>
-                <i>Hello, Jane Jacobs!</i>
+                <i>
+                    Hello, {firstName} {lastName}!
+                </i>
             </p>
         </form>
     );
