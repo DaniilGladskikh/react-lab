@@ -1,6 +1,6 @@
 export type State = {
     selectedId: number;
-    message: string;
+    drafts: { [contactId: number]: string };
 };
 
 export type Action = {
@@ -15,33 +15,42 @@ export type Action = {
 
 export const initialState = {
     selectedId: 0,
-    message: 'Hello',
+    drafts: {
+        0: 'Hello',
+        1: '',
+        2: '',
+    },
 };
 
 export function messengerReducer(
     state: State,
     action: Action
-) {
+): State {
     switch (action.type) {
         case 'changed_selection': {
             return {
                 ...state,
                 selectedId: action.contactId,
-                message: '',
             };
         }
         case 'edited_message': {
             return {
                 ...state,
-                message: action.message,
+                drafts: {
+                    ...state.drafts,
+                    [state.selectedId]: action.message,
+                },
             };
         }
         case 'sent_message': {
             return {
-              ...state,
-              message: '',
+                ...state,
+                drafts: {
+                    ...state.drafts,
+                    [state.selectedId]: '',
+                },
             };
-          }        
+        }
         default: {
             throw Error('Unknown action: ' + action.type);
         }
