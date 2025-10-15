@@ -1,11 +1,6 @@
-// 3_5_4  Implement useReducer from scratch 
-/*
-  В предыдущих примерах вы импортировали хук useReducer из React. В этот раз вам предстоит реализовать хук useReducer самостоятельно! Вот заглушка для начала работы. Он не должен занимать более 10 строк кода.
+// 3_5_4 Реализован собственный хук useReducer в файле MyReact.ts, который управляет состоянием с помощью переданного редуктора и начального состояния, используя useState для обновления состояния при вызовах dispatch
 
-  Чтобы проверить свои изменения, попробуйте ввести текст в поле ввода или выбрать контакт.
-*/
-
-import { useReducer } from 'react';
+import { useReducer } from './MyReact';
 import Chat from './Chat';
 import ContactList from './ContactList';
 import { initialState, messengerReducer } from './messengerReducer';
