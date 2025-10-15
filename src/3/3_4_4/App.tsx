@@ -1,15 +1,15 @@
-// 3_4_4 Clear an image while it’s loading
-/*
-  Когда вы нажимаете кнопку "Далее", браузер начинает загрузку следующего изображения. Однако, поскольку оно отображается в том же теге img, по умолчанию вы будете видеть предыдущее изображение, пока не загрузится следующее. Это может быть нежелательно, если важно, чтобы текст всегда совпадал с изображением. Измените это так, чтобы при нажатии кнопки "Next" предыдущее изображение сразу же убиралось.
-*/
+// 3_4_4 Реализована функциональность очистки изображения при его загрузке: при нажатии кнопки "Next" предыдущее изображение сразу же убирается, а не остается видимым до тех пор, пока не загрузится следующее.
 
 import { useState } from 'react';
 
 export default function Gallery() {
   const [index, setIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const hasNext = index < images.length - 1;
 
   function handleClick() {
+    setIsLoading(true);
+    
     if (hasNext) {
       setIndex(index + 1);
     } else {
@@ -26,7 +26,11 @@ export default function Gallery() {
       <h3>
         Image {index + 1} of {images.length}
       </h3>
-      <img src={image.src} />
+      <img 
+        src={isLoading ? '' : image.src} 
+        onLoad={() => setIsLoading(false)}
+        onError={() => setIsLoading(false)}
+      />
       <p>
         {image.place}
       </p>
@@ -36,23 +40,23 @@ export default function Gallery() {
 
 let images = [{
   place: 'Penang, Malaysia',
-  src: 'FJeJR8M.jpg'
+  src: '/FJeJR8M.jpg'
 }, {
   place: 'Lisbon, Portugal',
-  src: 'dB2LRbj.jpg'
+  src: '/dB2LRbj.jpg'
 }, {
   place: 'Bilbao, Spain',
-  src: 'z08o2TS.jpg'
+  src: '/z08o2TS.jpg'
 }, {
   place: 'Valparaíso, Chile',
-  src: 'Y3utgTi.jpg'
+  src: '/Y3utgTi.jpg'
 }, {
   place: 'Schwyz, Switzerland',
-  src: 'JBbMpWY.jpg'
+  src: '/JBbMpWY.jpg'
 }, {
   place: 'Prague, Czechia',
-  src: 'QwUKKmF.jpg'
+  src: '/QwUKKmF.jpg'
 }, {
   place: 'Ljubljana, Slovenia',
-  src: '3aIiwfm.jpg'
+  src: '/3aIiwfm.jpg'
 }];
