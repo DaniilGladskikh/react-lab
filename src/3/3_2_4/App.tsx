@@ -1,9 +1,5 @@
-// 3_2_4 Implement multiple selection
-/*
-    В этом примере каждое Letter имеет свойство isSelected и обработчик onToggle, который отмечает его как выбранное. Это работает, но состояние хранится как selectedId (либо null, либо ID), поэтому в каждый момент времени может быть выбрано только одно письмо.
-
-    Измените структуру состояния для поддержки множественного выбора (Как бы вы его структурировали? Подумайте об этом перед написанием кода). Каждый флажок должен стать независимым от других. Щелчок по выбранному письму должен снимать флажок. Наконец, нижний колонтитул должен показывать правильное количество выбранных элементов.
-*/
+// 3_2_4 Реализована поддержка множественного выбора писем
+// Состояние теперь хранится в виде Set<number>, где каждый элемент - ID выбранного письма. Это позволяет выбирать/снимать выбор с нескольких писем независимо друг от друга
 
 
 import { useState } from 'react';
@@ -11,14 +7,18 @@ import { letters } from './data.js';
 import Letter from './Letter.js';
 
 export default function MailClient() {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
-  // TODO: allow multiple selection
-  const selectedCount = 1;
+  const selectedCount = selectedIds.size;
 
   function handleToggle(toggledId: number) {
-    // TODO: allow multiple selection
-    setSelectedId(toggledId);
+    const newSelectedIds = new Set(selectedIds);
+    if (newSelectedIds.has(toggledId)) {
+      newSelectedIds.delete(toggledId);
+    } else {
+      newSelectedIds.add(toggledId);
+    }
+    setSelectedIds(newSelectedIds);
   }
 
   return (
@@ -29,10 +29,7 @@ export default function MailClient() {
           <Letter
             key={letter.id}
             letter={letter}
-            isSelected={
-              // TODO: allow multiple selection
-              letter.id === selectedId
-            }
+            isSelected={selectedIds.has(letter.id)}
             onToggle={handleToggle}
           />
         ))}
