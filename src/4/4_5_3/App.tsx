@@ -1,9 +1,4 @@
-// 4_5_3 Investigate a stale value bug
-/*
-  В этом примере розовая точка должна двигаться, когда флажок включен, и прекращать движение, когда флажок выключен. Логика для этого уже реализована: обработчик события handleMove проверяет переменную состояния canMove.
-
-  Однако по какой-то причине переменная состояния canMove внутри handleMove кажется "несвежей": она всегда true, даже после того, как вы установили флажок. Как такое возможно? Найдите ошибку в коде и исправьте ее.
-*/
+// 4_5_3 Добавлен canMove в список зависимостей useEffect, чтобы обработчик событий всегда использовал актуальное значение canMove.
 
 import { useState, useEffect } from 'react';
 
@@ -11,7 +6,7 @@ export default function App() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [canMove, setCanMove] = useState(true);
 
-  function handleMove(e) {
+  function handleMove(e: MouseEvent) {
     if (canMove) {
       setPosition({ x: e.clientX, y: e.clientY });
     }
@@ -20,8 +15,7 @@ export default function App() {
   useEffect(() => {
     window.addEventListener('pointermove', handleMove);
     return () => window.removeEventListener('pointermove', handleMove);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [canMove]);
 
   return (
     <>
