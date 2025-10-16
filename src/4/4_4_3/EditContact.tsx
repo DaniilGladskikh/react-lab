@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ContactType } from './App';
 
 export default function EditContact(
@@ -7,11 +7,6 @@ export default function EditContact(
 ) {
   const [name, setName] = useState(savedContact.name);
   const [email, setEmail] = useState(savedContact.email);
-
-  useEffect(() => {
-    setName(savedContact.name);
-    setEmail(savedContact.email);
-  }, [savedContact]);
 
   return (
     <section>

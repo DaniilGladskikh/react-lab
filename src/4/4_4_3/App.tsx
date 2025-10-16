@@ -1,9 +1,4 @@
-// 4_4_3 Reset state without Effects
-/*
-  Этот компонент EditContact получает объект контакта, имеющий форму { id, name, email } в качестве пропса savedContact. Попробуйте отредактировать поля ввода имени и электронной почты. Когда вы нажмете кнопку Save, кнопка контакта над формой обновится на отредактированное имя. При нажатии кнопки Reset все изменения в форме будут отменены. Поиграйте с этим пользовательским интерфейсом, чтобы почувствовать его.
-
-  Когда вы выбираете контакт с помощью кнопок вверху, форма сбрасывается, чтобы отразить данные этого контакта. Это делается с помощью эффекта внутри EditContact.js. Удалите этот эффект. Найдите другой способ сброса формы при изменении savedContact.id.
-*/
+// 4_4_3 Сброс состояния без использования Effects. Удален useEffect из EditContact. Сброс состояния теперь происходит при изменении savedContact.id за счет передачи savedContact.id как key компоненту EditContact. Это приводит к пересозданию компонента и сбросу его состояния.
 
 import { useState } from 'react';
 import ContactList from './ContactList';
@@ -41,7 +36,8 @@ export default function ContactManager() {
         onSelect={id => setSelectedId(id)}
       />
       <hr />
-      <EditContact        
+      <EditContact
+        key={selectedContact.id}
         savedContact={selectedContact}
         onSave={handleSave}
       />
