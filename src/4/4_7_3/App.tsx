@@ -1,11 +1,6 @@
-// 4_7_3 Fix a reconnecting chat 
-/*
-  В этом примере каждый раз, когда вы нажимаете кнопку "Toggle theme", чат переподключается. Почему это происходит? Исправьте ошибку, чтобы чат переподключался только тогда, когда вы редактируете URL сервера или выбираете другой чат.
+// 4_7_3 Исправлено переподключение чата. Использован useMemo для мемоизации объекта options, передаваемого в ChatRoom. Теперь чат переподключается только при изменении serverUrl или roomId, а не при каждом рендере компонента App (например, при переключении темы).
 
-  Относитесь к chat.ts как к внешней сторонней библиотеке: вы можете обратиться к ней, чтобы проверить ее API, но не редактируйте ее.
-*/
-
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import ChatRoom from './ChatRoom.tsx';
 
 export default function App() {
@@ -13,10 +8,10 @@ export default function App() {
   const [roomId, setRoomId] = useState('general');
   const [serverUrl, setServerUrl] = useState('https://localhost:1234');
 
-  const options = {
+  const options = useMemo(() => ({
     serverUrl: serverUrl,
     roomId: roomId
-  };
+  }), [serverUrl, roomId]);
 
   return (
     <div className={isDark ? 'dark' : 'light'}>
