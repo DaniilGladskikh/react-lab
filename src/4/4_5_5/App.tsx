@@ -1,11 +1,4 @@
-// 4_5_5 Populate a chain of select boxes
-/*
-  В этом примере есть два поля выбора. Одно поле позволяет пользователю выбрать планету. Другое поле позволяет пользователю выбрать место на этой планете. Второе поле пока не работает. Ваша задача - заставить его показывать места на выбранной планете.
-
-  Посмотрите, как работает первое поле выбора. Оно заполняет состояние planetList результатом вызова API "/planets". ID выбранной планеты хранится в переменной состояния planetId. Вам нужно найти, куда добавить дополнительный код, чтобы переменная состояния placeList заполнялась результатом вызова API "/planets/" + planetId + "/places".
-
-  Если вы реализуете это правильно, выбор планеты должен заполнить список мест. Изменение планеты должно изменить список мест.
-*/
+// 4_5_5 Заполнение цепочки полей выбора. Добавлен useEffect для запроса списка мест при изменении выбранной планеты (planetId). Теперь список мест в поле выбора обновляется в соответствии с выбранной планетой.
 
 import { useState, useEffect } from 'react';
 import { fetchData, GeoObj } from './api';
@@ -30,6 +23,27 @@ export default function Page() {
       ignore = true;
     }
   }, []);
+
+  useEffect(() => {
+    if (planetId === '') {
+      // Если планета не выбрана, очищаем список мест
+      setPlaceList([]);
+      setPlaceId('');
+      return;
+    }
+
+    let ignore = false;
+    fetchData(`/planets/${planetId}/places`).then(result => {
+      if (!ignore) {
+        console.log(`Fetched a list of places for planet ${planetId}.`);
+        setPlaceList(result);
+        setPlaceId(result[0]?.id || ''); // Выбираем первое место, если оно есть
+      }
+    });
+    return () => {
+      ignore = true;
+    }
+  }, [planetId]);
 
   return (
     <>
