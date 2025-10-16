@@ -1,26 +1,14 @@
-// 4_4_4 Submit a form without Effects 
-/*
-  Этот компонент Form позволяет вам отправить сообщение другу. Когда вы отправляете форму, переменная состояния showForm устанавливается в false. Это вызывает Эффект, вызывающий sendMessage(message), который отправляет сообщение (вы можете увидеть его в консоли). После отправки сообщения вы видите диалог "Спасибо" с кнопкой "Открыть чат", которая позволяет вам вернуться к форме.
+// 4_4_4 Удален useEffect, который вызывал sendMessage при изменении showForm. Теперь sendMessage вызывается непосредственно при отправке формы, что предотвращает отправку пустого сообщения.
 
-  Пользователи вашего приложения отправляют слишком много сообщений. Чтобы немного усложнить общение в чате, вы решили показывать диалог "Спасибо" первым, а не форму. Измените переменную состояния showForm так, чтобы она инициализировалась значением false вместо true. Как только вы сделаете это изменение, консоль покажет, что было отправлено пустое сообщение. Что-то в этой логике неправильно!
-
-  В чем первопричина этой проблемы? И как вы можете ее устранить?
-*/
-
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Form() {
   const [showForm, setShowForm] = useState(true);
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    if (!showForm) {
-      sendMessage(message);
-    }
-  }, [showForm, message]);
-
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    sendMessage(message);
     setShowForm(false);
   }
 
