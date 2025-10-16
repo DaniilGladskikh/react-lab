@@ -1,11 +1,4 @@
-// 4_3_4 Fix fetching inside an Effect
-/*
-  Этот компонент показывает биографию для выбранного человека. Он загружает биографию, вызывая асинхронную функцию fetchBio(person) при монтировании и при каждом изменении person. Эта асинхронная функция возвращает Promise, который в конечном итоге разрешается в строку. Когда выборка завершена, вызывается setBio для отображения этой строки в поле выбора.
-
-  В этом коде есть ошибка. Начните с выбора "Алисы". Затем выберите "Боб" и сразу после этого выберите "Тейлор". Если вы сделаете это достаточно быстро, вы заметите эту ошибку: Тейлор выбран, но в абзаце ниже написано "Это биография Боба".
-
-  Почему так происходит? Исправьте ошибку внутри этого Эффекта.
-*/
+// 4_3_4 Исправлена ошибка при выборке данных внутри Effect. Добавлена отмена предыдущего запроса при изменении person с помощью AbortController, чтобы избежать отображения устаревших данных, если новый запрос завершится быстрее предыдущего.
 
 import { useState, useEffect } from 'react';
 import { fetchBio } from './api.ts';
@@ -15,10 +8,22 @@ export default function Page() {
   const [bio, setBio] = useState<string | null> (null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     setBio(null);
-    fetchBio(person).then(result => {
-      setBio(result);
+    fetchBio(person, controller.signal).then(result => {
+      if (!controller.signal.aborted) {
+        setBio(result);
+      }
+    }).catch(error => {
+      if (error.name !== 'AbortError') {
+        throw error;
+      }
     });
+
+    return () => {
+      controller.abort();
+    };
   }, [person]);
 
   return (
